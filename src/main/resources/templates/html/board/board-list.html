@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h3>BoardList</h3>
+	<input type="text" id="biTitle"><button onclick="getBoards()">검색</button>
+	<table border="1">
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>등록자 번호</th>
+			<th>등록자 이름</th>
+			<th>credat</th>
+			<th>cretim</th>
+			<th>파일</th>
+		</tr>
+		<tbody id="tbody">
+			
+		</tbody>
+	</table>
+	<div id="pageDiv"></div>
+	<a href="/html/board/board-add">등록 하기</a>
+</body>
+<script>
+		let total = 0;
+		let pageSize = 5;
+		const blockSize=10;
+		
+		const getBoards = async function(evt,page){
+			if(!page){
+				page = 1;
+			}
+			let url=`/board-infos/helper?page=${page}&pageSize=${pageSize}`;
+			url += `&biTitle=${document.querySelector('#biTitle').value}`;
+			alert(url);
+			const res = await fetch(url);
+			const boardList = await res.json();
+			const totalCnt = boardList.totalCnt;
+			const pageBlock = Math.ceil(totalCnt/pageSize);//ceil은 올림을 해줌 그래서 결과는 7이나옴
+			let pageHtml = '';
+			const startBlock =(Math.ceil(page/blockSize)-1)*blockSize+1;
+			let endBlock =startBlock +blockSize -1;
+			if(endBlock > pageBlock){
+				endBlock =pageBlock
+			}
+			if(startBlock!=1){
+				pageHtml +=`<a href ="javascript:void(0)" onclick="getBoards(event,${startBlock-1})"> ◀</a>`;
+			}
+			for(let i = startBlock; i <= endBlock; i++){
+				pageHtml += `<a href="javascript:void(0)" onclick="getBoards(event,${i})"><b>[ ${i} ]</b></a>`;
+			}
+				if(endBlock<pageBlock){
+				pageHtml +=`<a href ="javascript:void(0)" onclick="getBoards(event,${endBlock+1})"> ▶</a>`;
+			}
+			document.querySelector('#pageDiv').innerHTML = pageHtml;
+			let html ='';
+			for(const list of boardList.list){
+				html += '<tr>';
+				html += `<td>${list.biNum}</td>`;
+				html += `<td><a href="/html/board/board-view?biNum=${list.biNum}">${list.biTitle}</a></td>`;
+				html += `<td>${list.uiNum}</td>`;
+				html += `<td>${list.uiName}</td>`;
+				html += `<td>${list.credat}</td>`;
+				html += `<td>${list.cretim}</td>`;
+				html += `<td>${list.biFileName?'<img src="/imgs/file.jpg" width="30">':''}</td>`;
+				html += '</tr>';
+			}
+			document.querySelector('#tbody').innerHTML=html;
+		}
+		window.addEventListener('load',getBoards);
+	
+</script>
+</html>

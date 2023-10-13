@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.secu1.board.mapper.BoardInfoMapper">
+
+
+	<insert id="insertBoardInfo" useGeneratedKeys="true"
+		keyColumn="BI_NUM" keyProperty="biNum">
+		INSERT INTO BOARD_INFO(
+		BI_TITLE,BI_CONTENT,BI_FILE_NAME,BI_FILE_PATH,UI_NUM
+		)
+		VALUES(
+		#{biTitle}, #{biContent}, #{biFileName}, #{biFilePath}, #{uiNum}
+		)
+	</insert>
+	<select id="selectBoardInfo"
+		resultType="com.test.secu1.board.vo.BoardInfoVO">
+		SELECT * FROM BOARD_INFO
+		WHERE BI_NUM=#{biNum}
+	</select>
+
+	<select id="selectBoardInfos"
+		resultType="com.test.secu1.board.vo.BoardInfoVO">
+		SELECT BI.BI_NUM, BI.BI_TITLE, BI.UI_NUM, UI.UI_NAME,
+		DATE_FORMAT(BI.CREDAT,'%Y-%m-%d') CREDAT,
+		DATE_FORMAT(STR_TO_DATE(BI.CRETIM,'%h%i%s'),'%h:%i:%s') CRETIM,
+		BI.BI_FILE_NAME
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		<where>
+		<if test='biTitle !=null and biTitle !=""'>
+			BI_TITLE LIKE CONCAT('%',#{biTitle},'%')
+		</if>
+		</where>
+		ORDER BY BI_NUM DESC
+		LIMIT #{start}, #{end}
+	</select>
+
+	<select id="selectBoardInfoCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+			<where>
+		<if test='biTitle !=null and biTitle !=""'>
+			BI_TITLE LIKE CONCAT('%',#{biTitle},'%')
+		</if>
+		</where>
+	</select>
+		<select id="selectBoardInfosWithHelper"
+		resultType="com.test.secu1.board.vo.BoardInfoVO">
+		SELECT BI.BI_NUM, BI.BI_TITLE, BI.UI_NUM, UI.UI_NAME,
+		DATE_FORMAT(BI.CREDAT,'%Y-%m-%d') CREDAT,
+		DATE_FORMAT(STR_TO_DATE(BI.CRETIM,'%h%i%s'),'%h:%i:%s') CRETIM,
+		BI.BI_FILE_NAME
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		<where>
+		<if test='biTitle !=null and biTitle !=""'>
+			BI_TITLE LIKE CONCAT('%',#{biTitle},'%')
+		</if>
+		</where>
+		ORDER BY BI_NUM DESC
+	</select>
+	</mapper>

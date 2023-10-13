@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<h3>BoardView</h3>
+	<table border="1">
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>등록자 번호</th>
+			<th>등록자 이름</th>
+			<th>credat</th>
+			<th>cretim</th>
+			<th>파일</th>
+		</tr>
+	</table>
+	<img src="" id="img" width="200">
+	<script>
+		const biNum = '[[${param.biNum}]]';
+		window.addEventListener('load',async function(){
+			const res = await fetch(`/board-infos/${biNum}`);
+			const board = await res.json();
+			console.log(board);
+			document.querySelector('#img').src=`/file/${board.biFilePath}`;
+		})
+	</script>
+</body>
+
+</html>

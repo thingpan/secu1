@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="EUC-KR">
+	<title>Insert title here</title>
+</head>ㄴㄴㄴㄴ
+
+<body>
+	<div id="sDiv">
+		<input type="text" id="name"><button onclick="startChat()">확인</button>
+	</div>
+	<div id="chatDiv" style="display:none">
+	<textarea id="chatContent" style="resize:none" cols="25" rows="10"></textarea><br>
+	<input type="text"  id="msg"><button onclick="sendMsg()">send</button>
+	</div>
+	<script>
+		let ws;
+		function sendMsg(){
+			if(document.querySelector('#msg').value.trim()){			
+			ws.send(document.querySelector('#msg').value);
+			}
+		}
+		function startChat() {
+			const name = document.querySelector('#name');
+			if (name.value.trim() === '') { 
+				alert('대화명을 작성해주세요');
+				return;
+			}
+			ws = new WebSocket(`ws://${location.host}/chat/${name.value.trim()}`);
+			ws.onmessage = function (res) {
+				const data = JSON.parse(res.data);
+				if (data.errMsg) {
+					alert(data.errMsg);
+					return;
+				}
+				document.querySelector('#chatContent').value += data.msg+'\r\n';
+			}
+			ws.onclose = function () {
+				document.querySelector('#sDiv').style.display = '';
+				document.querySelector('#chatDiv').style.display = 'none';
+			}
+			document.querySelector('#sDiv').style.display = 'none';
+			document.querySelector('#chatDiv').style.display = '';
+
+		}
+	</script>
+</body>
+
+</html>

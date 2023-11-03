@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+	<input type="file" id="file"><br>
+	<button onclick="upload")>file upload</button><br>
+<progress value="0" max="100" id="prog"></progress>
+<script>
+	 function upload(){
+		 const xhr =new XMLHttpRequest();
+		 const param =new FormData();
+		 param.append('file',document.querySelector('#file').files[0]);
+		 xhr.open('POST','/req/file')
+		 
+		xhr.upload.onprogress =function(data){
+			if(data.lengthComputable){
+				let result =data.loaded/data.total * 100;
+				result =Math.floor(result);
+				document.querySelector('#prog').value =result;
+			}
+		}
+		 xhr.onreadystatechange =function(){
+			 if(xhr.readyState ===xhr.DONE){
+				 if(xhr.status =200){
+					 console.log(xhr.responseText);
+				 }
+			 }
+		 }
+		 xhr.send(param);
+	 }
+</script>
+</body>
+</html>

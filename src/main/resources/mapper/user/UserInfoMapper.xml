@@ -5,7 +5,7 @@
 
 <mapper namespace="com.test.secu1.user.mapper.UserInfoMapper">
 	<sql id="userInfoCols">
-		UI_NUM, UI_NAME, UI_ID, UI_PWD, UI_MOBILE, UI_EMAIL, UI_BIRTH, CREDAT, LMODAT, ACTIVE
+		UI_NUM, UI_NAME, UI_ID, UI_PWD, UI_MOBILE, UI_EMAIL, UI_BIRTH,UI_ROLES, CREDAT, LMODAT, ACTIVE
 	</sql>
 	<select id="selectUserInfoByUiId" resultType="com.test.secu1.user.vo.UserInfoVO">
 		SELECT
@@ -17,11 +17,11 @@
 	<insert id="insertUserInfo">
 		INSERT INTO USER_INFO(
 			UI_NAME, UI_ID, UI_PWD, UI_MOBILE,
-			UI_EMAIL, UI_BIRTH
+			UI_EMAIL, UI_BIRTH ,UI_ROLES
 		)
 		VALUES(
 			#{uiName}, #{uiId}, #{uiPwd}, #{uiMobile},
-			#{uiEmail}, #{uiBirth}
+			#{uiEmail}, #{uiBirth} ,#{uiRoles}
 		)
 	</insert>
 	<update id="updateUserInfoUiPwd">

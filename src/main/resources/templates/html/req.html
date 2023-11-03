@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+ <input type="text" id="id"><br>
+  <input type="password" id="pwd"><br>
+   <button onclick="login1('JSON')" >JSON LOGIN</button>
+      <button onclick="login2('PARAM')" >PARAM LOGIN</button>
+   <script>
+	   function login1(type){
+		   const id =document.querySelector('#id').vaule;
+		   const pwd =document.querySelector('#pwd').vaule;
+		   let param = new FormData;
+		   param.append('id',id)
+		   	   param.append('pwd',pwd)
+		   const xhr =new XMLHttpRequest();
+			   xhr.open('post','/req/post');
+			   if(type==='JSON'){
+				   param ={
+					   id:id,
+					   pwd:pwd
+				   }
+				   param =JSON.parse(param);
+				   xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8')
+			   }
+			   xhr.onreadystatechange =function(){
+				   if(xhr.readyState=== xhr.DONE){
+					   if(xhr.status ===200){
+						   console.log(xhr.responseText);
+					   }
+					   
+				   }
+			   }
+			   xhr.send();
+		   }
+		   
+		  
+   </script>
+ 
+</body>
+</html>

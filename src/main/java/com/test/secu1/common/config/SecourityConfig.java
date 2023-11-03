@@ -19,7 +19,7 @@ public class SecourityConfig {
 		WebSecurityCustomizer webSecurityCustomizer() { //static 안에 있는 css등등 필요한 애들은 webServer딴에서 이그노어 해줘야 해서 일케 함
 			return web -> {
 				web.ignoring()	
-				.antMatchers("/css/**","/js/**","/imgs/**","/resources/**");
+				.antMatchers("/css/**","/js/**","/imgs/**","/resources/**","/tui/**");
 			};
 		}
 
@@ -27,8 +27,10 @@ public class SecourityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity hs) throws Exception {
 		
 		hs.authorizeRequests(req->req
-				.antMatchers("/login","/join","/html/login","/html/join")
+				.antMatchers("/login","/join","/html/login","/html/join","/rest/**","/test/**","/html/js/**")
 				.permitAll()
+				.antMatchers("/html/admin/**").hasRole("ADMIN")
+				.antMatchers("/html/user/**").hasRole("USER")
 				.anyRequest().authenticated())
 		.formLogin(formLogin -> formLogin
 				.loginPage("/html/login")
@@ -37,7 +39,11 @@ public class SecourityConfig {
 				.loginProcessingUrl("/login")
 				.defaultSuccessUrl("/")
 				.failureUrl("/html/login-fail"))
+		.logout(logout -> logout
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/html/login"))
 		.csrf(csfr -> csfr.disable())
+		.exceptionHandling(handling->handling.accessDeniedPage("/html/denied"))
 		.userDetailsService(userService);
 	
 		return hs.build();
